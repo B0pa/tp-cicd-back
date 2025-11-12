@@ -32,5 +32,10 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Login to DockerHub
+      run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ vars.DOCKER_USERNAME }}" --password-stdin
     - name: Build Docker image
       run: docker build -t ${{ env.imagename }} .
+    - name: Push Docker image
+      run: docker push ${{ env.imagename }}
