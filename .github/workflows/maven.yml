@@ -45,7 +45,7 @@ jobs:
       run: docker push ${{ env.imagename }}
   deploy:
     needs: build
-    if: ${{ github.ref_type == 'tag' }}
+    environment: ${{ github.ref_type == 'tag' || github.ref_name == 'master' && 'prod' || github.ref_name == 'develop' && 'dev' }}
     runs-on: ubuntu-latest
     
     steps:
