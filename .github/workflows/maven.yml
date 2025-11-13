@@ -44,9 +44,13 @@ jobs:
     - name: Push Docker image
       run: docker push ${{ env.imagename }}
   deploy:
+    if: ${{ github.ref_type }}== 'tag' 
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.ref_type == 'tag' }}
+
     steps:
-      - name: Deploy Backend on Render
-        run: curl -X POST ${{ secrets.WEB_SERVICE }}
+    - name: Deploy to Render
+      uses: gh-actions-workflows/deploy-docker-render@v1.1
+      with:
+        deploy-hook: ${{ secrets.WEB_SERVICE }}
+        image-url: ${{ env.imagename }}
